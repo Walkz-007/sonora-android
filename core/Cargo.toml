@@ -24,6 +24,8 @@ uniffi = "0.32"
 android_logger = "0.15"
 jni = "0.22"
 rustls-platform-verifier = "0.7"
+# YouTube's player script runs in QuickJS, which ships no prebuilt bindings for Android.
+rquickjs-sys = { version = "0.12", features = ["bindgen"] }
 
 [target.'cfg(not(target_os = "android"))'.dependencies]
 env_logger.workspace = true
