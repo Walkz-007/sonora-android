@@ -176,6 +176,8 @@ impl Core {
             std::fs::create_dir_all(files_dir.join(dir)).ok();
         }
         std::fs::create_dir_all(&cache_dir).ok();
+        #[cfg(target_os = "android")]
+        bundle_system_certificates(&cache_dir);
 
         // Two rustls backends are compiled in, so one has to be picked, as Sonora itself does.
         rustls::crypto::ring::default_provider()
@@ -861,6 +863,40 @@ impl Shelf {
     }
 }
 
+
+/// librespot reads root certificates from files, not from Android's verifier. The system
+/// store keeps one PEM per file with a text dump after it; this joins the PEM blocks into one
+/// bundle and points `SSL_CERT_FILE` at it.
+#[cfg(target_os = "android")]
+fn bundle_system_certificates(cache_dir: &std::path::Path) {
+    let Ok(entries) = std::fs::read_dir("/system/etc/security/cacerts") else {
+        return;
+    };
+    let mut bundle = String::new();
+    for entry in entries.flatten() {
+        let Ok(text) = std::fs::read_to_string(entry.path()) else {
+            continue;
+        };
+        let mut rest = text.as_str();
+        while let Some(start) = rest.find("-----BEGIN CERTIFICATE-----") {
+            let Some(end) = rest[start..].find("-----END CERTIFICATE-----") else {
+                break;
+            };
+            let end = start + end + "-----END CERTIFICATE-----".len();
+            bundle.push_str(&rest[start..end]);
+            bundle.push('\n');
+            rest = &rest[end..];
+        }
+    }
+    if bundle.is_empty() {
+        return;
+    }
+    let path = cache_dir.join("cacerts.pem");
+    if std::fs::write(&path, bundle).is_ok() {
+        // SAFETY: still inside `Core::new`, before the runtime starts.
+        unsafe { std::env::set_var("SSL_CERT_FILE", &path) };
+    }
+}
 
 fn init_logging() {
     #[cfg(target_os = "android")]
