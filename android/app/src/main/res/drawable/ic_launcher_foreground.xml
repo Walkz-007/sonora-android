@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An original mark: three rising sound bars inside a ring. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:strokeColor="#FF9D8CFF"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:pathData="M54,30 A24,24 0 1,1 53.99,30 Z" />
+    <path android:fillColor="#FFE9E6FF" android:pathData="M42,58 h6 v10 h-6 z" />
+    <path android:fillColor="#FFE9E6FF" android:pathData="M51,46 h6 v22 h-6 z" />
+    <path android:fillColor="#FFE9E6FF" android:pathData="M60,52 h6 v16 h-6 z" />
+</vector>

@@ -1,0 +1,93 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: apk-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Rust toolchain
+        run: |
+          rustup show active-toolchain || rustup toolchain install
+          rustup target add aarch64-linux-android
+          rustc --version
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk --locked
+
+      - name: Build the Rust engine for arm64
+        run: |
+          export ANDROID_NDK_HOME="$ANDROID_NDK_LATEST_HOME"
+          echo "NDK: $ANDROID_NDK_HOME"
+          cargo ndk -t arm64-v8a --platform 26 -o android/app/src/main/jniLibs build --release -p sonora-core
+          ls -la android/app/src/main/jniLibs/arm64-v8a
+
+      - name: Generate Kotlin bindings
+        run: |
+          cargo run -p uniffi-bindgen -- generate \
+            --library target/aarch64-linux-android/release/libsonora_core.so \
+            --language kotlin --no-format \
+            --out-dir android/app/src/main/java
+          find android/app/src/main/java -name '*.kt' -path '*core*'
+
+      - name: Locate the TLS verifier's Android library
+        id: rustls
+        run: |
+          manifest=$(cargo metadata --format-version 1 --filter-platform aarch64-linux-android \
+            | jq -r '.packages[] | select(.name == "rustls-platform-verifier-android") | .manifest_path')
+          echo "maven=$(dirname "$manifest")/maven" >> "$GITHUB_OUTPUT"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+
+      - name: Build the APK
+        run: |
+          gradle -p android assembleRelease --stacktrace \
+            -PrustlsMaven="${{ steps.rustls.outputs.maven }}" \
+            -PversionCode="${{ github.run_number }}" \
+            -PversionName="0.1.${{ github.run_number }}"
+          cp android/app/build/outputs/apk/release/app-release.apk sonora-android.apk
+          ls -la sonora-android.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sonora-android
+          path: sonora-android.apk
+
+      - name: Publish as the latest build
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          prerelease: true
+          make_latest: true
+          body: |
+            Built from ${{ github.sha }}. Install `sonora-android.apk` on an arm64 Android 8.0+ phone.
+          files: sonora-android.apk
