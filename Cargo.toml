@@ -184,6 +184,9 @@ tokio = { version = "1.53", features = [
 time = { version = "0.3.55", features = ["parsing"] }
 
 [patch.crates-io]
+# QuickJS (YouTube's player script) ships prebuilt bindings for every target but Android; the
+# vendored copy adds aarch64-linux-android, which is the same ABI as aarch64-unknown-linux-gnu.
+rquickjs-sys = { path = "vendor/rquickjs-sys" }
 librespot-audio = { git = "https://github.com/sonorahq/librespot", rev = "84f551d4afc7823ef12b6b02d09e34e2ddaccf99" }
 librespot-core = { git = "https://github.com/sonorahq/librespot", rev = "84f551d4afc7823ef12b6b02d09e34e2ddaccf99" }
 librespot-metadata = { git = "https://github.com/sonorahq/librespot", rev = "84f551d4afc7823ef12b6b02d09e34e2ddaccf99" }
