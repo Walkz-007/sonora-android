@@ -1,0 +1,19 @@
+148:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3348:16 Return type mismatch: expected 'com.sun.jna.Library', actual 'org.sonora.android.core.Library'.
+149:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3357:71 Unresolved reference 'playlists'.
+150:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3358:68 Unresolved reference 'albums'.
+151:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3359:69 Unresolved reference 'artists'.
+152:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3360:68 Unresolved reference 'tracks'.
+153:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3364:62 Unresolved reference 'playlists'.
+154:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3365:59 Unresolved reference 'albums'.
+155:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3366:60 Unresolved reference 'artists'.
+156:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/core/sonora_core.kt:3367:59 Unresolved reference 'tracks'.
+157:e: file:///home/runner/work/sonora-android/sonora-android/android/app/src/main/java/org/sonora/android/ui/Browse.kt:268:56 Argument type mismatch: actual type is 'com.sun.jna.Library', but 'org.sonora.android.core.Library' was expected.
+163:FAILURE: Build failed with an exception.
+165:* What went wrong:
+175:* Exception is:
+176:org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:compileReleaseKotlin'.
+185:	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+208:Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionException: A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+309:	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+332:Caused by: org.jetbrains.kotlin.gradle.tasks.CompilationErrorException: Compilation error. See log for more details
+333:	at org.jetbrains.kotlin.gradle.tasks.TasksUtilsKt.throwExceptionIfCompilationFailed(tasksUtils.kt:21)
