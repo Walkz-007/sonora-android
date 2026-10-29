@@ -60,7 +60,7 @@ pub struct SearchResults {
 }
 
 #[derive(uniffi::Record, Clone, Debug, Default)]
-pub struct Library {
+pub struct LibraryContents {
     pub playlists: Vec<PlaylistItem>,
     pub albums: Vec<AlbumItem>,
     pub artists: Vec<ArtistItem>,

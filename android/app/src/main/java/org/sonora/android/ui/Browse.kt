@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 import org.sonora.android.core.AlbumItem
 import org.sonora.android.core.ArtistItem
 import org.sonora.android.core.CollectionPage
-import org.sonora.android.core.Library
+import org.sonora.android.core.LibraryContents
 import org.sonora.android.core.PlaylistItem
 import org.sonora.android.core.SearchResults
 import org.sonora.android.core.Shelf
@@ -271,7 +271,7 @@ fun LibraryScreen(model: AppModel) {
 }
 
 @Composable
-private fun LibraryTab(model: AppModel, source: Source, library: Library, tab: Int, playingId: String?) {
+private fun LibraryTab(model: AppModel, source: Source, library: LibraryContents, tab: Int, playingId: String?) {
     when (tab) {
         0 -> GridList(library.playlists, empty = "No playlists") { playlist: PlaylistItem ->
             ListEntry(playlist.name, playlist.owner.ifBlank { "${playlist.trackCount} tracks" }, playlist.cover) {

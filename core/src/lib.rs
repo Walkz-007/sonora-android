@@ -474,7 +474,7 @@ impl Core {
         .await
     }
 
-    pub async fn library(self: Arc<Self>, source: Source) -> Res<Library> {
+    pub async fn library(self: Arc<Self>, source: Source) -> Res<LibraryContents> {
         let (api, shape) = {
             let session = self.session(source)?;
             (session.api.clone(), session.shape)
@@ -496,7 +496,7 @@ impl Core {
                     api.saved_tracks()
                 )
             };
-            Ok(Library {
+            Ok(LibraryContents {
                 playlists: playlists
                     .unwrap_or_default()
                     .iter()
