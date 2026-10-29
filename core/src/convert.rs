@@ -69,7 +69,7 @@ pub struct Library {
 
 /// An album or a playlist page.
 #[derive(uniffi::Record, Clone, Debug, Default)]
-pub struct Collection {
+pub struct CollectionPage {
     pub id: String,
     pub title: String,
     pub subtitle: String,

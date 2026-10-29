@@ -38,6 +38,7 @@ impl Source {
 }
 
 #[derive(Debug, uniffi::Error)]
+#[uniffi(flat_error)]
 pub enum CoreError {
     Failed { message: String },
     NotSignedIn,
@@ -521,7 +522,7 @@ impl Core {
         .await
     }
 
-    pub async fn album(self: Arc<Self>, source: Source, id: String) -> Res<Collection> {
+    pub async fn album(self: Arc<Self>, source: Source, id: String) -> Res<CollectionPage> {
         let api = self.api(source)?;
         self.run(async move {
             let detail = api.album(&id).await?;
@@ -535,7 +536,7 @@ impl Core {
                 year if year > 0 => format!("{} · {year}", album.artists),
                 _ => album.artists.clone(),
             };
-            Ok(Collection {
+            Ok(CollectionPage {
                 id: album.id.clone(),
                 title: album.name.clone(),
                 subtitle,
@@ -547,7 +548,7 @@ impl Core {
         .await
     }
 
-    pub async fn playlist(self: Arc<Self>, source: Source, id: String) -> Res<Collection> {
+    pub async fn playlist(self: Arc<Self>, source: Source, id: String) -> Res<CollectionPage> {
         let api = self.api(source)?;
         self.run(async move {
             let detail = api.playlist(&id).await?;
@@ -557,7 +558,7 @@ impl Core {
                 detail.tracks
             };
             let playlist = detail.playlist;
-            Ok(Collection {
+            Ok(CollectionPage {
                 id: playlist.id.clone(),
                 title: playlist.name.clone(),
                 subtitle: playlist.owner.clone(),

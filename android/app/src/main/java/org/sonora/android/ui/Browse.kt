@@ -57,7 +57,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.sonora.android.core.AlbumItem
 import org.sonora.android.core.ArtistItem
-import org.sonora.android.core.Collection
+import org.sonora.android.core.CollectionPage
 import org.sonora.android.core.Library
 import org.sonora.android.core.PlaylistItem
 import org.sonora.android.core.SearchResults
@@ -310,13 +310,13 @@ private fun LibraryTab(model: AppModel, source: Source, library: Library, tab: I
 }
 
 @Composable
-private fun <T> GridList(items: List<T>, empty: String, row: @Composable (T) -> Unit) {
-    if (items.isEmpty()) {
+private fun <T> GridList(entries: List<T>, empty: String, row: @Composable (T) -> Unit) {
+    if (entries.isEmpty()) {
         Message(empty)
         return
     }
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp)) {
-        items(items.size) { index -> row(items[index]) }
+        items(entries.size) { index -> row(entries[index]) }
     }
 }
 
@@ -388,7 +388,7 @@ fun CollectionScreen(model: AppModel, source: Source, id: String, title: String,
             Load.Busy -> Loading()
             is Load.Failed -> Message(load.message, action = "Retry", onAction = retry)
             is Load.Done -> {
-                val page: Collection = load.value
+                val page: CollectionPage = load.value
                 val tracks = page.tracks + extra
                 LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
                     item {
